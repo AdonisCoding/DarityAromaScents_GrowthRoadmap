@@ -1,0 +1,2540 @@
+<!-- Exchange Rate: 1 USD = 1.4235 CAD, Updated: June 24, 2026 (Source: exchangerates.org.uk) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Darity Aroma Scents — Growth Roadmap &amp; Software Cost Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #F4F0E9;
+      --bg-card:    #FDFCFA;
+      --bg-white:   #FFFFFF;
+      --bg-dark:    #1A1814;
+      --bg-dark2:   #211F1A;
+
+      --text:       #1A1814;
+      --text-2:     #62594E;
+      --text-3:     #9A9088;
+      --border:     #E2DDD5;
+      --border-lt:  #EDE9E2;
+
+      --p1:         #B87333;
+      --p1-lt:      #FAF0E4;
+      --p1-mid:     #F0D9B8;
+      --p2:         #557A64;
+      --p2-lt:      #EEF5F1;
+      --p2-mid:     #C8DDD2;
+      --p3:         #3A6882;
+      --p3-lt:      #EBF3F8;
+      --p3-mid:     #B8D4E3;
+
+      --man:        #B87333;
+      --ess:        #557A64;
+      --enh:        #7A7268;
+
+      --ff-display: 'Cormorant Garamond', Georgia, serif;
+      --ff-body:    'Inter', system-ui, sans-serif;
+
+      --r-sm:  6px;
+      --r-md:  10px;
+      --r-lg:  14px;
+
+      --sh:    0 1px 3px rgba(26,24,20,.06), 0 4px 16px rgba(26,24,20,.04);
+      --sh-md: 0 2px 8px rgba(26,24,20,.07), 0 8px 32px rgba(26,24,20,.05);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 60px; }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TYPOGRAPHY ─────────────────────────────── */
+    .disp-hero {
+      font-family: var(--ff-display);
+      font-size: clamp(3.2rem, 8vw, 6rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+    }
+    .disp-xl {
+      font-family: var(--ff-display);
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 400;
+      line-height: 1.1;
+    }
+    .disp-lg {
+      font-family: var(--ff-display);
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.15;
+    }
+    .disp-md {
+      font-family: var(--ff-display);
+      font-size: clamp(1.3rem, 2vw, 1.7rem);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+    p { line-height: 1.72; }
+    strong { font-weight: 600; }
+
+    /* ── LAYOUT ─────────────────────────────────── */
+    .wrap   { max-width: 980px;  margin: 0 auto; padding: 0 2rem; }
+    .wrap-w { max-width: 1140px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── HERO ────────────────────────────────────── */
+    .hero {
+      background: var(--bg-dark);
+      color: #F4F0E9;
+      padding: 6rem 0 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 15% 85%, rgba(184,115,51,.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 85% 15%, rgba(85,122,100,.12) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    /* scent thread decoration */
+    .hero-thread {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 45%;
+      opacity: .04;
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-kicker {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.4);
+      margin-bottom: 2.5rem;
+    }
+    .hero h1 { color: #F4F0E9; margin-bottom: 1rem; }
+    .hero h1 em { font-style: italic; color: rgba(244,240,233,.55); }
+    .hero-sub {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: rgba(244,240,233,.55);
+      max-width: 520px;
+      line-height: 1.75;
+      margin-bottom: 3.5rem;
+    }
+    .hero-bar {
+      display: flex;
+      gap: 3.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(244,240,233,.1);
+      flex-wrap: wrap;
+    }
+    .hero-bar-item {}
+    .hero-bar-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.32);
+      margin-bottom: 0.25rem;
+    }
+    .hero-bar-val {
+      font-family: var(--ff-display);
+      font-size: 0.95rem;
+      color: rgba(244,240,233,.75);
+    }
+
+    /* ── SECTIONS ────────────────────────────────── */
+    .section        { padding: 5rem 0; }
+    .section-lg     { padding: 6.5rem 0; }
+    .section-white  { background: var(--bg-white); }
+    .section-card   { background: var(--bg-card); }
+    .section-dark   { background: var(--bg-dark);  color: #F4F0E9; }
+    .section-dark2  { background: var(--bg-dark2); color: #F4F0E9; }
+    .section-p1     { background: var(--p1-lt); }
+    .section-p2     { background: var(--p2-lt); }
+    .section-p3     { background: var(--p3-lt); }
+
+    .section-head { margin-bottom: 3rem; }
+    .section-head .eyebrow { display: block; margin-bottom: 0.75rem; }
+
+    /* ── WAVE DIVIDER ────────────────────────────── */
+    .wave { display: block; line-height: 0; overflow: hidden; }
+
+    /* ── CARDS ───────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.5rem;
+    }
+    .card-white {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.5rem;
+    }
+    .card-dark {
+      background: rgba(244,240,233,.04);
+      border: 1px solid rgba(244,240,233,.1);
+      border-radius: var(--r-md);
+      padding: 1.5rem;
+    }
+
+    /* ── TAGS ────────────────────────────────────── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2em 0.65em;
+      border-radius: 4px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .tag-man { background: rgba(184,115,51,.13); color: var(--man); }
+    .tag-ess { background: rgba(85,122,100,.13); color: var(--ess); }
+    .tag-enh { background: rgba(122,114,104,.13); color: var(--enh); }
+    .tag-lay { background: rgba(26,24,20,.07);    color: var(--text-2); }
+    .tag-p1  { background: rgba(184,115,51,.1);   color: var(--p1); }
+    .tag-p2  { background: rgba(85,122,100,.1);   color: var(--p2); }
+    .tag-p3  { background: rgba(58,104,130,.1);   color: var(--p3); }
+
+    /* inline badge for dark bg */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15em 0.6em;
+      border-radius: 3px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .badge-man { background: rgba(184,115,51,.22); color: #DEAA70; }
+    .badge-ess { background: rgba(85,122,100,.22); color: #88C4A0; }
+    .badge-enh { background: rgba(122,114,104,.22); color: #ADA79F; }
+
+    /* ── PHASE HEADER ────────────────────────────── */
+    .phase-head {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 3rem;
+    }
+    .phase-num {
+      font-family: var(--ff-display);
+      font-size: 5rem;
+      font-weight: 300;
+      line-height: 1;
+      opacity: .18;
+    }
+    .section-p1 .phase-num { color: var(--p1); }
+    .section-p2 .phase-num { color: var(--p2); }
+    .section-p3 .phase-num { color: var(--p3); }
+    .phase-meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3em 0.9em;
+      border-radius: 20px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+    .section-p1 .phase-meta-tag { background: var(--p1-mid); color: var(--p1); }
+    .section-p2 .phase-meta-tag { background: var(--p2-mid); color: var(--p2); }
+    .section-p3 .phase-meta-tag { background: var(--p3-mid); color: var(--p3); }
+    .phase-title { margin-bottom: 0.6rem; }
+    .phase-summary { font-size: 0.95rem; color: var(--text-2); max-width: 600px; }
+
+    /* ── THREE-COL OBJECTIVES ────────────────────── */
+    .obj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .obj-cell {
+      background: var(--bg-white);
+      padding: 1.25rem 1.5rem;
+    }
+    .obj-label { color: var(--text-3); margin-bottom: 0.5rem; }
+    .obj-text { font-size: 0.875rem; line-height: 1.65; }
+
+    /* ── DELIVERABLES GRID ───────────────────────── */
+    .deliv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .deliv-group {}
+    .deliv-group-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.75rem;
+    }
+    .deliv-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-lt);
+    }
+    .deliv-item:last-child { border-bottom: none; }
+    .deliv-name { font-size: 0.875rem; font-weight: 500; margin-bottom: 0.15rem; }
+    .deliv-desc { font-size: 0.8rem; color: var(--text-2); line-height: 1.55; }
+    .deliv-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+
+    /* ── RHYTHMS + KPIS ──────────────────────────── */
+    .rk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .list-block-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 0.75rem;
+    }
+    .check-list { list-style: none; }
+    .check-list li {
+      display: flex;
+      gap: 0.55rem;
+      font-size: 0.85rem;
+      color: var(--text-2);
+      padding: 0.3rem 0;
+      line-height: 1.55;
+      border-bottom: 1px solid var(--border-lt);
+    }
+    .check-list li:last-child { border-bottom: none; }
+    .check-list li::before {
+      content: '—';
+      color: var(--text-3);
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .check-list li strong { color: var(--text); font-weight: 500; }
+
+    /* ── EXIT CRITERIA ───────────────────────────── */
+    .exit-box {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    .exit-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 1rem;
+    }
+    .exit-items { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .exit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4em 0.85em;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      background: var(--bg-card);
+      color: var(--text-2);
+    }
+    .exit-pill::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .section-p1 .exit-pill::before { background: var(--p1); }
+    .section-p2 .exit-pill::before { background: var(--p2); }
+    .section-p3 .exit-pill::before { background: var(--p3); }
+
+    /* ── SOFTWARE COST ───────────────────────────── */
+    .sw-section {
+      background: var(--bg-dark);
+      border-top: 1px solid rgba(244,240,233,.06);
+    }
+    .sw-phase-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .sw-phase-tag {
+      padding: 0.3em 0.9em;
+      border-radius: 20px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .sw-p1-tag { background: rgba(184,115,51,.2); color: #DEAA70; }
+    .sw-p2-tag { background: rgba(85,122,100,.2);  color: #88C4A0; }
+    .sw-p3-tag { background: rgba(58,104,130,.2);  color: #82C4DE; }
+    .sw-head-title {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #F4F0E9;
+    }
+    .sw-intro {
+      font-size: 0.875rem;
+      color: rgba(244,240,233,.5);
+      max-width: 680px;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    /* tier blocks */
+    .sw-tier {
+      margin-bottom: 1.5rem;
+    }
+    .sw-tier-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(244,240,233,.08);
+    }
+    .sw-tier-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .man .sw-tier-dot  { background: #DEAA70; }
+    .ess .sw-tier-dot  { background: #88C4A0; }
+    .enh .sw-tier-dot  { background: #ADA79F; }
+    .sw-tier-name {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+    .man .sw-tier-name { color: #DEAA70; }
+    .ess .sw-tier-name { color: #88C4A0; }
+    .enh .sw-tier-name { color: #ADA79F; }
+    .sw-tier-sub {
+      font-size: 0.78rem;
+      color: rgba(244,240,233,.35);
+      margin-left: auto;
+    }
+
+    .tool-row {
+      display: grid;
+      grid-template-columns: 170px 1fr 80px;
+      gap: 1rem;
+      align-items: start;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(244,240,233,.05);
+    }
+    .tool-row:last-child { border-bottom: none; }
+    .tool-name { font-size: 0.875rem; font-weight: 500; color: #F4F0E9; }
+    .tool-plan { font-size: 0.72rem; color: rgba(244,240,233,.4); margin-top: 0.1rem; }
+    .tool-why  { font-size: 0.78rem; color: rgba(244,240,233,.5); line-height: 1.5; }
+    .tool-cost {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(244,240,233,.85);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .tool-cost small { font-size: 0.6rem; font-weight: 400; color: rgba(244,240,233,.35); }
+
+    /* cost summary */
+    .cost-box {
+      background: rgba(244,240,233,.04);
+      border: 1px solid rgba(244,240,233,.1);
+      border-radius: var(--r-md);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    .cost-box-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.35);
+      margin-bottom: 1rem;
+    }
+    .cost-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+      border-bottom: 1px solid rgba(244,240,233,.06);
+    }
+    .cost-line:last-child { border-bottom: none; }
+    .cost-line.total { padding-top: 0.75rem; font-size: 0.95rem; }
+    .cost-lbl { color: rgba(244,240,233,.55); }
+    .cost-val { font-variant-numeric: tabular-nums; color: rgba(244,240,233,.85); }
+    .cost-line.total .cost-val { color: #F0C078; font-weight: 600; }
+    .cost-line.total .cost-lbl { color: rgba(244,240,233,.8); font-weight: 500; }
+    .cost-note {
+      font-size: 0.75rem;
+      color: rgba(244,240,233,.3);
+      margin-top: 0.75rem;
+      line-height: 1.55;
+    }
+
+    /* recommended paths */
+    .paths-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .path-card {
+      border-radius: var(--r-md);
+      padding: 1.25rem;
+      border: 1px solid rgba(244,240,233,.09);
+      background: rgba(244,240,233,.02);
+    }
+    .path-card.rec {
+      border-color: rgba(184,115,51,.45);
+      background: rgba(184,115,51,.06);
+    }
+    .path-lbl {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.3);
+      margin-bottom: 0.4rem;
+    }
+    .path-lbl.rec-lbl { color: #DEAA70; }
+    .path-name {
+      font-family: var(--ff-display);
+      font-size: 1.1rem;
+      color: #F4F0E9;
+      margin-bottom: 0.2rem;
+    }
+    .path-amount {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #F4F0E9;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    .path-amount small { font-size: 0.7rem; font-weight: 400; color: rgba(244,240,233,.4); }
+    .path-desc { font-size: 0.75rem; color: rgba(244,240,233,.4); margin-top: 0.4rem; line-height: 1.5; }
+
+    /* ── FRAMEWORK GRID ──────────────────────────── */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+    }
+    .fw-layer { background: var(--bg-white); padding: 1.5rem 1.25rem; }
+    .fw-num { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.4rem; }
+    .fw-name { font-family: var(--ff-display); font-size: 1.1rem; font-weight: 500; margin-bottom: 0.35rem; }
+    .fw-desc { font-size: 0.78rem; color: var(--text-2); line-height: 1.5; margin-bottom: 0.6rem; }
+    .fw-when { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+
+    /* ── GUIDANCE GRID ───────────────────────────── */
+    .guidance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .guidance-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1.75rem 1.5rem;
+    }
+    .guidance-card.man-card { border-top: 3px solid var(--man); }
+    .guidance-card.ess-card { border-top: 3px solid var(--ess); }
+    .guidance-card.enh-card { border-top: 3px solid var(--enh); }
+    .guidance-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+    .guidance-title { font-family: var(--ff-display); font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .guidance-body { font-size: 0.85rem; color: var(--text-2); line-height: 1.65; }
+    .guidance-when { margin-top: 1rem; }
+    .guidance-when-title { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.4rem; }
+    .guidance-when-list { list-style: none; }
+    .guidance-when-list li { font-size: 0.8rem; color: var(--text-2); padding: 0.2rem 0; }
+    .guidance-when-list li::before { content: '→ '; color: var(--text-3); }
+
+    /* ── FINAL SUMMARY ───────────────────────────── */
+    .summary-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(244,240,233,.08);
+      border: 1px solid rgba(244,240,233,.1);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin-top: 3rem;
+    }
+    .summary-pillar {
+      padding: 2rem 1.5rem;
+      background: rgba(244,240,233,.03);
+    }
+    .sp-num {
+      font-family: var(--ff-display);
+      font-size: 2.5rem;
+      font-weight: 300;
+      opacity: .2;
+      margin-bottom: 0.5rem;
+    }
+    .sp-p1 .sp-num { color: #DEAA70; }
+    .sp-p2 .sp-num { color: #88C4A0; }
+    .sp-p3 .sp-num { color: #82C4DE; }
+    .sp-title { font-family: var(--ff-display); font-size: 1.2rem; color: #F4F0E9; margin-bottom: 0.4rem; }
+    .sp-body { font-size: 0.825rem; color: rgba(244,240,233,.45); line-height: 1.6; }
+
+    /* ── DARK UTILITIES ──────────────────────────── */
+    .dark-eyebrow { color: rgba(244,240,233,.35); }
+    .dark-body { font-size: 0.95rem; color: rgba(244,240,233,.55); line-height: 1.75; max-width: 620px; }
+    .dark-divider { height: 1px; background: rgba(244,240,233,.08); margin: 4rem 0; }
+
+    /* ── OVERVIEW HIGHLIGHT ──────────────────────── */
+    .overview-cols {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .overview-why { margin-top: 2.5rem; }
+    .overview-why-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--text-3); margin-bottom: 1rem; }
+    .why-item { display: flex; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-lt); align-items: flex-start; }
+    .why-item:last-child { border-bottom: none; }
+    .why-num { font-family: var(--ff-display); font-size: 1.6rem; font-weight: 300; color: var(--p1); line-height: 1; flex-shrink: 0; margin-top: -0.1rem; }
+    .why-text { font-size: 0.875rem; color: var(--text-2); line-height: 1.6; }
+    .why-text strong { color: var(--text); font-weight: 500; }
+    .overview-aside {}
+    .aside-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 1.5rem; }
+    .aside-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--text-3); margin-bottom: 1rem; }
+    .aside-phase-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-lt);
+    }
+    .aside-phase-row:last-child { border-bottom: none; }
+    .aside-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .aside-phase-name { font-size: 0.78rem; font-weight: 500; }
+    .aside-phase-sub { font-size: 0.72rem; color: var(--text-3); }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    .footer {
+      background: var(--bg-dark);
+      border-top: 1px solid rgba(244,240,233,.07);
+      padding: 2.5rem 0;
+      text-align: center;
+    }
+    .footer-brand { font-family: var(--ff-display); font-size: 1.2rem; color: rgba(244,240,233,.45); margin-bottom: 0.35rem; }
+    .footer-note { font-size: 0.72rem; color: rgba(244,240,233,.22); line-height: 1.6; }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 860px) {
+      .wrap, .wrap-w { padding: 0 1.25rem; }
+      .disp-hero { font-size: 3.2rem; }
+      .phase-head { grid-template-columns: 60px 1fr; gap: 1rem; }
+      .phase-num { font-size: 4rem; }
+      .obj-grid { grid-template-columns: 1fr; }
+      .deliv-grid { grid-template-columns: 1fr; }
+      .rk-grid { grid-template-columns: 1fr; }
+      .framework-grid { grid-template-columns: 1fr 1fr; }
+      .guidance-grid { grid-template-columns: 1fr; }
+      .paths-grid { grid-template-columns: 1fr; }
+      .overview-cols { grid-template-columns: 1fr; gap: 2rem; }
+      .tool-row { grid-template-columns: 1fr 1fr; }
+      .tool-row .tool-why { grid-column: 1 / -1; }
+      .summary-pillars { grid-template-columns: 1fr; }
+      .hero-bar { gap: 1.5rem; }
+    }
+    @media (max-width: 560px) {
+      .section, .section-lg { padding: 3.5rem 0; }
+      .paths-grid { grid-template-columns: 1fr; }
+      .tool-row { grid-template-columns: 1fr; }
+      .tool-cost { text-align: left; }
+      .framework-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── FIXED NAVIGATION ────────────────────────── */
+    .site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(26,24,20,0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(244,240,233,.07);
+      height: 56px;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .site-nav.nav-scrolled {
+      box-shadow: 0 2px 28px rgba(26,24,20,.45);
+      border-bottom-color: rgba(244,240,233,.12);
+    }
+    .nav-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .nav-brand {
+      font-family: var(--ff-display);
+      font-size: 1rem;
+      font-weight: 400;
+      color: rgba(244,240,233,.82);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: 0.01em;
+      transition: color 0.2s ease;
+    }
+    .nav-brand:hover { color: rgba(244,240,233,1); }
+    .nav-brand em { font-style: italic; color: rgba(244,240,233,.42); }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      gap: 0;
+    }
+    .nav-links > li { position: relative; }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0 0.85rem;
+      height: 56px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.42);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: var(--ff-body);
+    }
+    .nav-link:hover, .nav-link.nav-active { color: rgba(244,240,233,.9); }
+    .nav-link.nav-active { color: #DEAA70; }
+
+    .has-sub > .nav-link::after {
+      content: '';
+      width: 4px; height: 4px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translateY(-1px);
+      transition: transform 0.22s ease;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .has-sub:hover > .nav-link::after { transform: rotate(-135deg) translateY(1px); }
+
+    /* Dropdowns */
+    .nav-sub {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      min-width: 210px;
+      background: rgba(21,19,16,0.98);
+      border: 1px solid rgba(244,240,233,.1);
+      border-radius: var(--r-md);
+      list-style: none;
+      padding: 0.5rem 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 40px rgba(26,24,20,.6);
+    }
+    .has-sub:hover .nav-sub {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .nav-sub-parent-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.1rem 0.45rem;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.28);
+      border-bottom: 1px solid rgba(244,240,233,.07);
+      margin-bottom: 0.25rem;
+      cursor: default;
+    }
+    .nav-sub a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: rgba(244,240,233,.52);
+      text-decoration: none;
+      transition: color 0.15s ease, background 0.15s ease;
+      font-family: var(--ff-body);
+    }
+    .nav-sub a:hover { color: rgba(244,240,233,.92); background: rgba(244,240,233,.04); }
+    .nav-sub-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+    .dot-p1 { background: var(--p1); }
+    .dot-p2 { background: var(--p2); }
+    .dot-p3 { background: var(--p3); }
+
+    /* Phase accent line on nav items */
+    .nav-sep {
+      width: 1px;
+      height: 18px;
+      background: rgba(244,240,233,.1);
+      margin: 0 0.25rem;
+      flex-shrink: 0;
+    }
+
+    /* Mobile hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.6rem;
+      margin-left: auto;
+      border-radius: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 20px; height: 1.5px;
+      background: rgba(244,240,233,.6);
+      transition: transform 0.28s ease, opacity 0.28s ease;
+      transform-origin: center;
+    }
+    .nav-toggle.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    @media (max-width: 860px) {
+      .nav-toggle { display: flex; }
+      .nav-links {
+        position: absolute;
+        top: 56px; left: 0; right: 0;
+        background: rgba(20,18,15,0.99);
+        border-bottom: 1px solid rgba(244,240,233,.09);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.36s cubic-bezier(.4,0,.2,1);
+        backdrop-filter: blur(14px);
+        padding: 0;
+      }
+      .nav-links.is-open { max-height: 640px; }
+      .nav-link {
+        height: auto;
+        padding: 0.75rem 1.5rem;
+        border-bottom: 1px solid rgba(244,240,233,.05);
+        justify-content: space-between;
+      }
+      .has-sub > .nav-link::after { display: inline-block; }
+      .nav-sub {
+        position: static;
+        opacity: 1;
+        pointer-events: all;
+        transform: none;
+        background: rgba(244,240,233,.025);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        min-width: unset;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      .has-sub.sub-open .nav-sub { max-height: 200px; }
+      .has-sub.sub-open > .nav-link::after { transform: rotate(-135deg) translateY(1px); }
+      .nav-sub a { padding: 0.65rem 2.25rem; }
+      .nav-sub-parent-label { padding-left: 2.25rem; }
+      .nav-sep { display: none; }
+    }
+
+    /* ── ATTRIBUTION TAG ─────────────────────────── */
+    .attr-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.28);
+      margin-top: 0.35rem;
+    }
+    .attr-tag::before {
+      content: '';
+      display: inline-block;
+      width: 12px; height: 1px;
+      background: rgba(244,240,233,.2);
+    }
+    .footer-attr {
+      font-size: 0.7rem;
+      color: rgba(244,240,233,.22);
+      margin-top: 0.3rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── BALANCED HIGHLIGHT CARD ─────────────────── */
+    .guidance-card.ess-card {
+      position: relative;
+      border: 1.5px solid rgba(85,122,100,.35);
+      background: linear-gradient(160deg, #fff 70%, rgba(85,122,100,.04));
+    }
+    .ess-rec-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25em 0.75em;
+      background: rgba(85,122,100,.12);
+      border: 1px solid rgba(85,122,100,.25);
+      border-radius: 20px;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ess);
+      margin-bottom: 0.75rem;
+    }
+    .ess-rec-badge::before {
+      content: '★';
+      font-size: 0.65rem;
+    }
+    .ess-value-list {
+      list-style: none;
+      margin-top: 0.85rem;
+      border-top: 1px solid rgba(85,122,100,.15);
+      padding-top: 0.75rem;
+    }
+    .ess-value-list li {
+      font-size: 0.78rem;
+      color: var(--text-2);
+      padding: 0.3rem 0;
+      display: flex;
+      gap: 0.5rem;
+      line-height: 1.5;
+    }
+    .ess-value-list li::before {
+      content: '✓';
+      color: var(--ess);
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      margin-top: 0.1rem;
+    }
+
+    /* ── CAD DUAL-CURRENCY COLUMNS ──────────────────────────────────────── */
+    /* Expand tool-row to 4 columns within sw-sections */
+    .sw-section .tool-row {
+      grid-template-columns: 170px 1fr auto auto;
+      column-gap: 0.75rem;
+    }
+    /* CAD cost cell */
+    .tool-cost-cad {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(244,240,233,.42);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      padding-left: 0.75rem;
+      border-left: 1px solid rgba(244,240,233,.09);
+    }
+    .tool-cost-cad small { font-size: 0.6rem; font-weight: 400; color: rgba(244,240,233,.22); }
+    /* "CAD" micro-label above CAD amounts */
+    .ccy-tag {
+      display: block;
+      font-size: 0.48rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.22);
+      margin-bottom: 0.1rem;
+    }
+    /* Tier-header CAD subtotal */
+    .sw-tier-sub-cad {
+      font-size: 0.66rem;
+      color: rgba(244,240,233,.28);
+      font-variant-numeric: tabular-nums;
+      margin-left: 0.5rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid rgba(244,240,233,.12);
+    }
+    /* Column-label row inside each tier block */
+    .tool-col-label-row {
+      display: grid;
+      grid-template-columns: 170px 1fr auto auto;
+      column-gap: 0.75rem;
+      padding: 0.25rem 0 0.3rem;
+      border-bottom: 1px solid rgba(244,240,233,.07);
+      margin-bottom: 0.2rem;
+    }
+    .col-ccy-head {
+      font-size: 0.48rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(244,240,233,.22);
+      text-align: right;
+    }
+    /* Cost-box: wrap USD + CAD side by side */
+    .cost-amounts {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      flex-shrink: 0;
+    }
+    .cost-val-cad {
+      font-size: 0.78rem;
+      color: rgba(244,240,233,.35);
+      font-variant-numeric: tabular-nums;
+      padding-left: 0.65rem;
+      border-left: 1px solid rgba(244,240,233,.1);
+    }
+    .cost-line.total .cost-val-cad {
+      color: rgba(240,192,120,.48);
+      font-weight: 500;
+    }
+    /* Path card CAD sub-amount */
+    .path-amount-cad {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: rgba(244,240,233,.38);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      margin-top: 0.22rem;
+    }
+    .path-amount-cad small {
+      font-size: 0.62rem;
+      font-weight: 400;
+      color: rgba(244,240,233,.2);
+    }
+    /* Section-level currency legend */
+    .currency-legend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      color: rgba(244,240,233,.3);
+      border: 1px solid rgba(244,240,233,.08);
+      border-radius: 6px;
+      padding: 0.4rem 0.9rem;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+    }
+    .currency-legend strong { color: rgba(244,240,233,.55); }
+    /* Tier-guidance table CAD columns */
+    .th-cad {
+      text-align: right;
+      padding: 0.75rem 0.6rem;
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      opacity: 0.72;
+      border-left: 1px solid var(--border-lt);
+      background: rgba(85,122,100,.03);
+    }
+    .td-cad {
+      padding: 0.85rem 0.6rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-3);
+      font-size: 0.78rem;
+      border-left: 1px solid var(--border-lt);
+      background: rgba(85,122,100,.02);
+    }
+    /* Responsive: collapse CAD column gracefully */
+    @media (max-width: 860px) {
+      .sw-section .tool-row { grid-template-columns: 1fr 1fr; }
+      .tool-cost-cad { border-left: none; padding-left: 0; }
+      .tool-col-label-row { grid-template-columns: 1fr 1fr; }
+      .currency-legend { flex-direction: column; gap: 0.2rem; text-align: center; }
+    }
+    @media (max-width: 560px) {
+      .sw-section .tool-row { grid-template-columns: 1fr; }
+      .tool-cost-cad { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     FIXED NAVIGATION
+════════════════════════════════════════════════ -->
+<nav id="site-nav" class="site-nav" role="navigation" aria-label="Document navigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">Darity Aroma <em>Scents</em></a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li>
+        <a href="#exec-overview" class="nav-link">Overview</a>
+      </li>
+      <li>
+        <a href="#framework" class="nav-link">Framework™</a>
+      </li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li class="has-sub">
+        <span class="nav-link" tabindex="0">Foundation</span>
+        <ul class="nav-sub" role="menu">
+          <li class="nav-sub-parent-label">Phase 1</li>
+          <li role="menuitem"><a href="#phase1"><span class="nav-sub-dot dot-p1"></span>Foundation Phase</a></li>
+          <li role="menuitem"><a href="#sw-phase1"><span class="nav-sub-dot dot-p1"></span>Phase 1 Software Stack</a></li>
+        </ul>
+      </li>
+      <li class="has-sub">
+        <span class="nav-link" tabindex="0">Systems</span>
+        <ul class="nav-sub" role="menu">
+          <li class="nav-sub-parent-label">Phase 2</li>
+          <li role="menuitem"><a href="#phase2"><span class="nav-sub-dot dot-p2"></span>Systems Phase</a></li>
+          <li role="menuitem"><a href="#sw-phase2"><span class="nav-sub-dot dot-p2"></span>Phase 2 Software Additions</a></li>
+        </ul>
+      </li>
+      <li class="has-sub">
+        <span class="nav-link" tabindex="0">Growth</span>
+        <ul class="nav-sub" role="menu">
+          <li class="nav-sub-parent-label">Phase 3</li>
+          <li role="menuitem"><a href="#phase3"><span class="nav-sub-dot dot-p3"></span>Growth Phase</a></li>
+          <li role="menuitem"><a href="#sw-phase3"><span class="nav-sub-dot dot-p3"></span>Phase 3 Software Additions</a></li>
+        </ul>
+      </li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li>
+        <a href="#tier-guidance" class="nav-link">Tier Guide</a>
+      </li>
+      <li>
+        <a href="#summary" class="nav-link">Summary</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<header class="hero">
+  <svg class="hero-thread" viewBox="0 0 500 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M420 50 Q300 200 380 350 Q460 500 320 650 Q180 800 260 900" stroke="#F4F0E9" stroke-width="1.2" fill="none"/>
+    <path d="M450 100 Q340 260 410 400 Q480 540 350 680 Q210 820 290 920" stroke="#F4F0E9" stroke-width="0.6" fill="none"/>
+    <path d="M390 0 Q260 140 350 300 Q440 460 290 620 Q150 770 230 880" stroke="#F4F0E9" stroke-width="0.4" fill="none"/>
+  </svg>
+  <div class="wrap hero-inner">
+    <p class="hero-kicker">Confidential Growth Document · Prepared for Daphine · Darity Aroma Scents</p>
+    <p class="attr-tag">Developed by Aldo Dawa</p>
+    <h1 class="disp-hero">Darity<br>Aroma <em>Scents</em></h1>
+    <p class="hero-sub">Growth Roadmap &amp; Software Cost Architecture — a three-phase implementation plan for building a conversion-ready store, retention systems, and a scalable acquisition engine, without outpacing your foundation.</p>
+    <div class="hero-bar">
+      <div class="hero-bar-item">
+        <p class="hero-bar-label">Document Type</p>
+        <p class="hero-bar-val">Growth Roadmap + Software Plan</p>
+      </div>
+      <div class="hero-bar-item">
+        <p class="hero-bar-label">Phases</p>
+        <p class="hero-bar-val">Foundation · Systems · Growth</p>
+      </div>
+      <div class="hero-bar-item">
+        <p class="hero-bar-label">Framework</p>
+        <p class="hero-bar-val">Growth Systems Framework™</p>
+      </div>
+      <div class="hero-bar-item">
+        <p class="hero-bar-label">Brand Category</p>
+        <p class="hero-bar-val">Scent / Home Fragrance DTC</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════
+     EXECUTIVE OVERVIEW
+════════════════════════════════════════════════ -->
+<section id="exec-overview" class="section section-white">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Executive Overview</span>
+      <h2 class="disp-xl">The business challenge — and<br>why sequence matters.</h2>
+    </div>
+    <div class="overview-cols">
+      <div>
+        <p style="font-size:1.05rem; color:var(--text-2); line-height:1.8; margin-bottom:1.5rem;">Darity Aroma Scents has something most early-stage brands struggle to clearly own — a sensory product with genuine gifting appeal, lifestyle positioning, and real multi-channel potential across Shopify, Etsy, and eventually Amazon.</p>
+        <p style="font-size:1.05rem; color:var(--text-2); line-height:1.8; margin-bottom:1.5rem;">The challenge is not the product. The challenge is sequencing the growth work correctly.</p>
+        <p style="font-size:0.95rem; color:var(--text-2); line-height:1.78;">Too many early-stage eCommerce brands rush toward paid advertising before their store is genuinely worth arriving at. They send cold traffic to product pages that feel unfinished. They run ads before their tracking is reliable enough to tell them what's working. They invest in acquisition before they've built any retention economics — which means every customer they earn is also a customer they're likely to lose.</p>
+
+        <div class="overview-why">
+          <p class="overview-why-title">Why this plan is phased this way</p>
+          <div class="why-item">
+            <span class="why-num">1</span>
+            <p class="why-text"><strong>Foundation first.</strong> Before traffic is sent anywhere, the store needs to be worth arriving at. Product pages, trust architecture, tracking, and offer structure come before acquisition.</p>
+          </div>
+          <div class="why-item">
+            <span class="why-num">2</span>
+            <p class="why-text"><strong>Systems before scaling.</strong> Retention, email flows, content engines, and reviews compound quietly — but only if they're built before you're paying to acquire every customer twice.</p>
+          </div>
+          <div class="why-item">
+            <span class="why-num">3</span>
+            <p class="why-text"><strong>Acquisition on a proven foundation.</strong> Paid social, Etsy expansion, and a creative testing engine only perform reliably when the infrastructure underneath them is solid enough to hold the weight.</p>
+          </div>
+        </div>
+      </div>
+      <div class="overview-aside">
+        <div class="aside-block">
+          <p class="aside-title">Three-Phase Structure at a Glance</p>
+          <div class="aside-phase-row">
+            <div class="aside-dot" style="background:var(--p1)"></div>
+            <div>
+              <p class="aside-phase-name">Phase 1 — Foundation</p>
+              <p class="aside-phase-sub">Store, copy, tracking, bundles, initial creative tools</p>
+            </div>
+          </div>
+          <div class="aside-phase-row">
+            <div class="aside-dot" style="background:var(--p2)"></div>
+            <div>
+              <p class="aside-phase-name">Phase 2 — Systems</p>
+              <p class="aside-phase-sub">Email flows, content engine, reviews, automation, lead magnets</p>
+            </div>
+          </div>
+          <div class="aside-phase-row">
+            <div class="aside-dot" style="background:var(--p3)"></div>
+            <div>
+              <p class="aside-phase-name">Phase 3 — Growth</p>
+              <p class="aside-phase-sub">Paid acquisition, Etsy, creative testing, loyalty, Q2+ expansion</p>
+            </div>
+          </div>
+        </div>
+        <div class="aside-block" style="margin-top:1rem;">
+          <p class="aside-title">Software Cost Range by Phase</p>
+          <div class="aside-phase-row">
+            <div class="aside-dot" style="background:var(--p1)"></div>
+            <div>
+              <p class="aside-phase-name">Phase 1</p>
+              <p class="aside-phase-sub">$113 – $146 / month</p>
+            </div>
+          </div>
+          <div class="aside-phase-row">
+            <div class="aside-dot" style="background:var(--p2)"></div>
+            <div>
+              <p class="aside-phase-name">Phase 2 cumulative</p>
+              <p class="aside-phase-sub">$239 – $361 / month</p>
+            </div>
+          </div>
+          <div class="aside-phase-row">
+            <div class="aside-dot" style="background:var(--p3)"></div>
+            <div>
+              <p class="aside-phase-name">Phase 3 cumulative</p>
+              <p class="aside-phase-sub">$286 – $408 / month (up to $635 accelerated)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     STRATEGIC FRAMEWORK
+════════════════════════════════════════════════ -->
+<section id="framework" class="section section-card">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Growth Systems Framework™</span>
+      <h2 class="disp-xl">The five layers that shape<br>every decision in this plan.</h2>
+      <p style="font-size:0.95rem; color:var(--text-2); margin-top:1rem; max-width:620px; line-height:1.75;">Every deliverable in this roadmap maps to a specific layer of the Growth Systems Framework. The framework prevents random activity — it forces each phase to solve the right constraint at the right time. Early phases build the layers that later phases depend on.</p>
+    </div>
+    <div class="framework-grid">
+      <div class="fw-layer">
+        <p class="fw-num">Layer 1</p>
+        <p class="fw-name">Foundation</p>
+        <p class="fw-desc">Tracking integrity, attribution reliability, KPI baselines, trust architecture, and store operational readiness. Nothing built on top of this layer is trustworthy without it.</p>
+        <div class="fw-when">
+          <span class="tag tag-p1">Phase 1 primary</span>
+        </div>
+      </div>
+      <div class="fw-layer">
+        <p class="fw-num">Layer 2</p>
+        <p class="fw-name">Architecture</p>
+        <p class="fw-desc">Offer structure, collection and merchandising logic, bundle architecture, funnel pathways, and the store's conversion infrastructure. Shapes how visitors move through the brand and decide to buy.</p>
+        <div class="fw-when">
+          <span class="tag tag-p1">Phase 1</span>
+          <span class="tag tag-p2">Phase 2</span>
+        </div>
+      </div>
+      <div class="fw-layer">
+        <p class="fw-num">Layer 3</p>
+        <p class="fw-name">Creative Velocity</p>
+        <p class="fw-desc">Systematic creative production, AI-assisted content pipelines, ad concept generation, angle diversification, and prevention of creative fatigue — the fuel for both organic and paid channels.</p>
+        <div class="fw-when">
+          <span class="tag tag-p2">Phase 2</span>
+          <span class="tag tag-p3">Phase 3 primary</span>
+        </div>
+      </div>
+      <div class="fw-layer">
+        <p class="fw-num">Layer 4</p>
+        <p class="fw-name">Optimization Logic</p>
+        <p class="fw-desc">Performance review systems, scaling decision frameworks, budget allocation logic, testing criteria, and the KPI thresholds that tell you when to scale and when to hold.</p>
+        <div class="fw-when">
+          <span class="tag tag-p3">Phase 3 primary</span>
+        </div>
+      </div>
+      <div class="fw-layer">
+        <p class="fw-num">Layer 5</p>
+        <p class="fw-name">Scalable Infrastructure</p>
+        <p class="fw-desc">Lifecycle automation, CRM and retention systems, newsletter infrastructure, review generation, operational SOPs, multi-channel coordination — the engine that creates compounding customer value.</p>
+        <div class="fw-when">
+          <span class="tag tag-p2">Phase 2 primary</span>
+          <span class="tag tag-p3">Phase 3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     PHASE 1 — FOUNDATION
+════════════════════════════════════════════════ -->
+<section id="phase1" class="section-lg section-p1">
+  <div class="wrap">
+    <div class="phase-head">
+      <div class="phase-num">1</div>
+      <div>
+        <span class="phase-meta-tag">Foundation Phase</span>
+        <h2 class="disp-lg phase-title">Build a store worth<br>sending people to.</h2>
+        <p class="phase-summary">Phase 1 is entirely about conversion readiness. Before any traffic — paid or organic — is directed at Darity Aroma Scents, the store must earn trust, communicate the product clearly, and convert a meaningful percentage of visitors into customers. No acquisition engine performs reliably on a store that is not yet worth arriving at.</p>
+      </div>
+    </div>
+
+    <div class="obj-grid">
+      <div class="obj-cell">
+        <p class="label obj-label">Phase Objective</p>
+        <p class="obj-text">Transform the Shopify store from an early-stage skeleton into a credible, trustworthy, conversion-capable destination for both organic discovery and eventual paid traffic.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="label obj-label">Business Problem Solved</p>
+        <p class="obj-text">Without scent-led product copy, verified tracking, and a working offer architecture, every future traffic investment risks landing on a store that loses most visitors before they convert.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="label obj-label">Phase 1 Outcome</p>
+        <p class="obj-text">Store is fully operational, credibly presented, and conversion-ready. Tracking is verified. A bundle offer is live. Email capture is active. The foundation for everything in Phase 2 is in place.</p>
+      </div>
+    </div>
+
+    <p class="label deliv-group-title" style="margin-bottom:1.5rem;">Implementation Deliverables</p>
+    <div class="deliv-grid">
+      <div>
+        <div class="deliv-group">
+          <p class="deliv-group-title">Store &amp; Site Foundation</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Homepage Clarity Overhaul</p>
+            <p class="deliv-desc">Rewrite the hero headline to communicate the brand's scent-led value proposition. Improve navigation structure, primary CTA logic, and brand trust cues above the fold.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Policy &amp; Trust Pages Published</p>
+            <p class="deliv-desc">Shipping policy, returns and exchanges, privacy policy, terms of service, and FAQ page — all written, published, and linked in the footer. Converts uncertain visitors into confident buyers.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">About &amp; Founder Story Page</p>
+            <p class="deliv-desc">A well-written brand story that gives Darity a human face and emotional context. Fragrance brands earn trust through narrative. This page does the work that product copy alone cannot.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Collection Architecture Cleanup</p>
+            <p class="deliv-desc">Organize products into logical collections — by scent family, occasion, or format. Eliminate dead-end navigation paths and surface bestsellers prominently for first-time visitors.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Analytics, Tracking &amp; Attribution</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Google Analytics 4 Setup &amp; Verification</p>
+            <p class="deliv-desc">GA4 property configured, key conversion events verified (product view, add to cart, checkout steps, purchase). Baseline report established. Without verified tracking, every future decision is guesswork.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Meta Pixel Installation</p>
+            <p class="deliv-desc">Facebook/Meta Pixel installed and tested for future paid social. Install early — the Pixel builds audience data even before you spend a dollar on ads, which makes Phase 3 paid launch significantly more efficient.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Shopify Analytics Baseline Report</p>
+            <p class="deliv-desc">Document Phase 1 baseline metrics — traffic, conversion rate, top landing pages, cart abandonment rate. This becomes the benchmark everything in Phase 2 and 3 is measured against.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">AI Creative Production Setup</p>
+          <div class="deliv-item">
+            <p class="deliv-name">AI Studio Toolkit Configuration</p>
+            <p class="deliv-desc">Set up and configure the core creative production suite: Midjourney, OpenArt, Google AI, and Adobe Creative Cloud. Establish brand prompt guidelines and a visual direction system for consistent output.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Initial Brand Mood Board &amp; Visual Assets</p>
+            <p class="deliv-desc">Produce the first batch of brand lifestyle visuals, product photography supplements, and on-brand imagery using the AI studio stack. Establishes the visual language all future content builds on.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="deliv-group">
+          <p class="deliv-group-title">Product Page &amp; Merchandising Optimization</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Scent-Led Product Copy — All Products</p>
+            <p class="deliv-desc">Every product page rewritten with sensory, evocative, conversion-focused copy. Describe how the fragrance smells, feels, and fits into the buyer's life — not generic attributes. This is the most high-leverage single deliverable in Phase 1.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Product Photography Consistency Review</p>
+            <p class="deliv-desc">Audit all product images for consistency of background, lighting, and presentation. Use AI studio tools to supplement with lifestyle imagery where product-only shots feel sparse.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Related Products &amp; Cross-Sell Logic</p>
+            <p class="deliv-desc">Connect product pages with relevant related items and cross-sell prompts. Customers exploring one scent should be naturally guided toward complementary products — building basket size without friction.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Offer Architecture — Phase 1 Foundation</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Bundle &amp; Gift Set Architecture (Kaching)</p>
+            <p class="deliv-desc">Install and configure Kaching Bundles. Build at least one curated scent gift set and one volume-discount bundle. Fragrance is a high-gifting category — a well-presented bundle can increase average order value from the very first week.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">In-Cart Upsell Entry Points</p>
+            <p class="deliv-desc">Configure basic in-cart or post-add upsell prompts using Kaching's upsell logic. Small, relevant prompts at the cart step can lift revenue per session without requiring additional traffic.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Email &amp; List-Building Infrastructure Prep</p>
+          <div class="deliv-item">
+            <p class="deliv-name">AiTrillion Light Setup &amp; Email Capture Popup</p>
+            <p class="deliv-desc">Install AiTrillion and configure a basic email capture popup with a compelling incentive (discount, exclusive offer, or early access). Start building the list now — every subscriber captured in Phase 1 becomes an asset in Phase 2's email flows.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Newsletter Sign-Up Incentive Copy</p>
+            <p class="deliv-desc">Write persuasive, brand-appropriate copy for the email capture moment. Generic "sign up for updates" language captures nobody. A specific, sensory-led offer converts meaningfully.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rhythms & KPIs -->
+    <div class="rk-grid">
+      <div class="card-white">
+        <p class="list-block-title">Operating Rhythms — Phase 1</p>
+        <ul class="check-list">
+          <li><strong>Weekly site review</strong> — broken links, product page improvements, navigation issues</li>
+          <li><strong>Monthly analytics baseline check</strong> — traffic, conversion rate, bounce rate, cart abandonment</li>
+          <li><strong>First content assets</strong> — 1–2 brand visual pieces per week as AI tools are configured</li>
+          <li><strong>Email capture performance check</strong> — popup conversion rate, list growth rate, incentive effectiveness</li>
+          <li><strong>Bundle performance review</strong> — is the gift set being added to cart? Are upsells converting?</li>
+        </ul>
+      </div>
+      <div class="card-white">
+        <p class="list-block-title">Success Signals — What Good Looks Like</p>
+        <ul class="check-list">
+          <li>All product pages carry <strong>complete, scent-led copy</strong> with no placeholder content</li>
+          <li>Policy and trust pages are <strong>live, linked, and readable</strong> on mobile</li>
+          <li><strong>GA4 events verified</strong> — add-to-cart and purchase events firing correctly</li>
+          <li>Bundle or gift set is <strong>live and being added to cart</strong> by real visitors</li>
+          <li><strong>Email capture rate above 1%</strong> of site sessions</li>
+          <li>Store conversion rate <strong>baseline documented</strong> for Phase 2 comparison</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exit-box">
+      <p class="exit-title">Phase 1 Exit Criteria — what must be true before Phase 2 begins</p>
+      <div class="exit-items">
+        <span class="exit-pill">All product pages complete with scent-led copy</span>
+        <span class="exit-pill">Policy and trust pages published</span>
+        <span class="exit-pill">GA4 + Meta Pixel verified and firing</span>
+        <span class="exit-pill">At least one bundle or gift set live</span>
+        <span class="exit-pill">Email capture mechanism active</span>
+        <span class="exit-pill">Phase 1 baseline metrics documented</span>
+        <span class="exit-pill">AI creative toolkit configured and producing assets</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Phase 1 Software -->
+<section id="sw-phase1" class="section sw-section">
+  <div class="wrap">
+    <div class="sw-phase-head">
+      <span class="sw-phase-tag sw-p1-tag">Phase 1</span>
+      <h3 class="sw-head-title">Phase 1 Software Stack</h3>
+    </div>
+    <p class="sw-intro">Phase 1 introduces only the tools directly required to execute foundation deliverables: the store platform, bundle architecture, the initial creative production suite for brand assets and product imagery, and light list-capture setup. Video and voiceover production tools are deferred to Phase 2 when the content engine becomes the primary objective.</p>
+    <div class="currency-legend"><span>Prices shown in <strong>USD</strong> and <strong>CAD</strong></span><span>Rate: 1 USD = 1.4235 CAD &nbsp;·&nbsp; Jun 24, 2026</span></div>
+
+    <!-- Mandatory -->
+    <div class="sw-tier man card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Mandatory — Cannot execute Phase 1 properly without these</span>
+        <span class="sw-tier-sub">$113 / month</span><span class="sw-tier-sub-cad">· CA$160.86/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Shopify</p><p class="tool-plan">Basic Plan</p></div>
+        <p class="tool-why">The storefront platform the entire plan is built on. Every other tool connects to it. Non-negotiable from Day 1 through every phase.</p>
+        <p class="tool-cost">$27 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$38.43 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Kaching Bundles &amp; Upsells</p><p class="tool-plan">Starter</p></div>
+        <p class="tool-why">Activates the bundle and gift set architecture that is a direct Phase 1 deliverable. Also enables in-cart upsells to improve revenue per session without extra traffic spend.</p>
+        <p class="tool-cost">$15 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$21.35 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Midjourney</p><p class="tool-plan">Standard</p></div>
+        <p class="tool-why">Core AI image generation for brand visual direction, lifestyle imagery, mood boards, and product photography supplements. Sets the visual language all future content builds on.</p>
+        <p class="tool-cost">$30 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$42.70 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Google AI</p><p class="tool-plan">Pro</p></div>
+        <p class="tool-why">Writing, research, product copy ideation, and content planning support across all phases from Day 1. Acts as a general intelligence layer that accelerates execution across the entire roadmap.</p>
+        <p class="tool-cost">$20 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$28.47 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Adobe Creative Cloud</p><p class="tool-plan">Students &amp; Teachers</p></div>
+        <p class="tool-why">The professional editing and finishing layer for creative assets. Refines AI-generated imagery, prepares branded graphics, and polishes content outputs to a presentation-ready standard.</p>
+        <p class="tool-cost">$21 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$29.89 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <!-- Essential -->
+    <div class="sw-tier ess card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Essential — Meaningful Phase 1 improvement; not blocking</span>
+        <span class="sw-tier-sub">$33 / month</span><span class="sw-tier-sub-cad">· CA$46.98/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">OpenArt AI</p><p class="tool-plan">Essential</p></div>
+        <p class="tool-why">Additional AI image and visual concept generation that complements Midjourney. Useful for exploring more experimental visual directions quickly. Midjourney alone can cover Phase 1, but OpenArt adds useful creative range.</p>
+        <p class="tool-cost">$14 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$19.93 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">AiTrillion</p><p class="tool-plan">Basic (up to 1,000 contacts)</p></div>
+        <p class="tool-why">Light setup in Phase 1 for email capture popup and early list building. Its full value — email flows, reviews, cart recovery, retention automation — is unlocked in Phase 2. Starting it now means the contact list begins growing immediately.</p>
+        <p class="tool-cost">$19 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$27.05 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <!-- Enhancer -->
+    <div class="sw-tier enh card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Enhancer — Deferred to Phase 2 · Do not subscribe yet</span>
+        <span class="sw-tier-sub">$55 / month if added early</span><span class="sw-tier-sub-cad">· CA$78.29/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Kling AI</p><p class="tool-plan">Pro</p></div>
+        <p class="tool-why">AI video generation for social and ad creative. Not yet required in Phase 1 — the content engine is still being configured. Becomes Mandatory in Phase 2 when consistent video content production is the primary deliverable.</p>
+        <p class="tool-cost">$33 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$46.98 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">ElevenLabs</p><p class="tool-plan">Creator</p></div>
+        <p class="tool-why">AI voiceover for video content. Not needed until the video production workflow is active in Phase 2. Introducing it in Phase 1 adds cost before the use case exists to justify it.</p>
+        <p class="tool-cost">$22 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$31.32 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <div class="cost-box">
+      <p class="cost-box-title">Phase 1 Monthly Cost Summary</p>
+      <div class="cost-line"><span class="cost-lbl">Mandatory tools</span><div class="cost-amounts"><span class="cost-val">$113 / month</span><span class="cost-val-cad">CA$160.86</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">Essential tools</span><div class="cost-amounts"><span class="cost-val">$33 / month</span><span class="cost-val-cad">CA$46.98</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">Enhancer tools (deferred)</span><div class="cost-amounts"><span class="cost-val">$0 — not yet subscribed</span><span class="cost-val-cad">CA$0.00</span></div></div>
+      <div class="cost-line total"><span class="cost-lbl">Phase 1 Balanced (Mandatory + Essential)</span><div class="cost-amounts"><span class="cost-val">$146 / month</span><span class="cost-val-cad">CA$207.83</span></div></div>
+      <p class="cost-note">These are new monthly subscriptions introduced in Phase 1. The Lean path ($113) covers the store, core creative tools, and bundles only. The Balanced path ($146) adds visual exploration depth and begins email list infrastructure.</p>
+    </div>
+
+    <div class="paths-grid">
+      <div class="path-card">
+        <p class="path-lbl">Lean Path</p>
+        <p class="path-name">Mandatory Only</p>
+        <p class="path-amount">$113 <small>/month</small></p>
+        <p class="path-amount-cad">CA$160.86 <small>/month</small></p>
+        <p class="path-desc">Store platform, bundle architecture, and core AI creative suite. Sufficient to execute all critical Phase 1 deliverables.</p>
+      </div>
+      <div class="path-card rec">
+        <p class="path-lbl rec-lbl">★ Recommended</p>
+        <p class="path-name">Balanced Path</p>
+        <p class="path-amount">$146 <small>/month</small></p>
+        <p class="path-amount-cad">CA$207.83 <small>/month</small></p>
+        <p class="path-desc">Adds OpenArt for visual range and AiTrillion to begin list-building. The list that grows during Phase 1 pays dividends when Phase 2 email flows go live.</p>
+      </div>
+      <div class="path-card">
+        <p class="path-lbl">Accelerated</p>
+        <p class="path-name">All Tiers Activated</p>
+        <p class="path-amount">$201 <small>/month</small></p>
+        <p class="path-amount-cad">CA$286.12 <small>/month</small></p>
+        <p class="path-desc">Adds Kling AI and ElevenLabs early if you want to begin video content production before Phase 2 formally begins.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     PHASE 2 — SYSTEMS
+════════════════════════════════════════════════ -->
+<section id="phase2" class="section-lg section-p2">
+  <div class="wrap">
+    <div class="phase-head">
+      <div class="phase-num">2</div>
+      <div>
+        <span class="phase-meta-tag">Systems Phase</span>
+        <h2 class="disp-lg phase-title">Build the machine that keeps<br>customers without paying for them twice.</h2>
+        <p class="phase-summary">Phase 2 installs the retention, content, and automation systems that turn the store into a revenue machine that doesn't depend on manual effort or constant new acquisition. It creates compounding value — email flows that run without you, content that produces consistently, reviews that build trust automatically, and workflows that reduce execution overhead.</p>
+      </div>
+    </div>
+
+    <div class="obj-grid">
+      <div class="obj-cell">
+        <p class="label obj-label">Phase Objective</p>
+        <p class="obj-text">Install the lifecycle systems that capture, nurture, and recover revenue that would otherwise be lost — welcome flows, cart recovery, reviews, social content, and the automation layer that orchestrates it all.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="label obj-label">Business Problem Solved</p>
+        <p class="obj-text">Without retention infrastructure, every customer acquired through paid or organic channels has a ceiling — they buy once and disappear. Phase 2 builds the systems that raise that ceiling and create repeat purchase economics.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="label obj-label">Phase 2 Outcome</p>
+        <p class="obj-text">Welcome and cart recovery flows are live and performing. Social content publishes consistently. Reviews are appearing on product pages. Automation workflows are reducing manual work. Email is generating 15%+ of total revenue.</p>
+      </div>
+    </div>
+
+    <p class="label deliv-group-title" style="margin-bottom:1.5rem;">Implementation Deliverables</p>
+    <div class="deliv-grid">
+      <div>
+        <div class="deliv-group">
+          <p class="deliv-group-title">Email / CRM / Retention Systems</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Welcome Flow — 3 to 5 Email Sequence</p>
+            <p class="deliv-desc">Brand story → scent education → first purchase incentive. The welcome flow is typically the highest-revenue-per-subscriber email sequence a brand will ever send. This must be built before any meaningful list growth occurs.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Abandoned Cart Recovery Flow</p>
+            <p class="deliv-desc">A 2–3 email sequence triggered when a cart is abandoned. Targets the highest-intent segment of all site visitors — people who chose a product and almost bought it. Industry benchmark: 5–15% recovery rate on cold.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Browse Abandonment Flow</p>
+            <p class="deliv-desc">Re-engagement sequence for subscribers who viewed products without adding to cart. Softer than cart recovery — focuses on product discovery, scent storytelling, and soft nudges rather than urgency.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Post-Purchase Follow-Up &amp; Review Request</p>
+            <p class="deliv-desc">Thank-you email with care instructions, usage tips, and a structured review request trigger. Review generation must be built into the operational system — not done manually one by one.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Newsletter Infrastructure &amp; Broadcast Cadence</p>
+            <p class="deliv-desc">Monthly or biweekly newsletter structure with a consistent brand voice. Keeps the list warm between purchase cycles and creates a direct communication channel that doesn't depend on platform algorithms.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Social Proof Infrastructure</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Review Collection System Activation</p>
+            <p class="deliv-desc">Configure AiTrillion's review request triggers in the post-purchase flow. Set a target of 10+ verified reviews across top products by end of Phase 2. Reviews are social proof that replaces the credibility that ad spend alone cannot buy.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Review Display on Product Pages</p>
+            <p class="deliv-desc">Ensure reviews appear visibly on product pages with star ratings visible in collection view. The presence of genuine reviews materially improves cold traffic conversion rate — this is measurable infrastructure, not just aesthetics.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Lead Magnet &amp; List Growth Architecture</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Lead Magnet Concept &amp; Creation</p>
+            <p class="deliv-desc">Design a relevant, high-value lead magnet for the fragrance audience — a Scent Personality Quiz, a Home Fragrance Starter Guide, or a seasonal scent pairing resource. This creates a reason to subscribe beyond a generic discount.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Tally Form Setup &amp; Lead Delivery Automation</p>
+            <p class="deliv-desc">Build the lead capture form or quiz using Tally Pro. Connect to AiTrillion or n8n for automated lead magnet delivery and welcome sequence trigger. The form is the front door; the automation is what makes it work at scale.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="deliv-group">
+          <p class="deliv-group-title">Content Engine &amp; Social Platforms</p>
+          <div class="deliv-item">
+            <p class="deliv-name">AI-Assisted Video Content Production System</p>
+            <p class="deliv-desc">Activate Kling AI for video asset generation, ElevenLabs for voiceover production, and Runway ML for video editing support. Establish a repeatable workflow: brief → script → AI generation → edit → publish. This is the system that makes consistent content possible without burning out.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Social Content Calendar — 3 Months Rolling</p>
+            <p class="deliv-desc">A structured content calendar for Instagram, TikTok, and Pinterest. Scent content performs well on all three: TikTok for discovery and reach, Instagram for brand depth, Pinterest for evergreen search traffic. Three posts per week minimum to establish algorithmic momentum.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Pinterest SEO Content Strategy</p>
+            <p class="deliv-desc">A keyword-optimized pinning strategy targeting fragrance-related search terms. Pinterest is an underused channel for home fragrance — pins live for months and generate consistent traffic without requiring ongoing manual effort.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Synthetic UGC Content Assets</p>
+            <p class="deliv-desc">Use Synthetic UGC to produce UGC-style creative assets for organic content variety and early ad creative testing. Removes the dependency on sourcing live creators before the brand's review and community base is large enough.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Metricool Scheduling Setup</p>
+            <p class="deliv-desc">Configure Metricool for multi-platform content scheduling across Instagram, TikTok, and Pinterest. Reduces manual posting friction and creates a reliable publishing cadence that doesn't depend on remembering to post each day.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Content Operations SOP</p>
+            <p class="deliv-desc">Document the end-to-end content production workflow so it can be repeated efficiently each week. An undocumented process is not a system — it's a personal dependency. This SOP makes the content engine transferable and scalable.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Automation &amp; Backend Intelligence</p>
+          <div class="deliv-item">
+            <p class="deliv-name">n8n Workflow Setup — Core Automations</p>
+            <p class="deliv-desc">Configure n8n as the automation backbone. First workflows: content script generation, lead delivery handling, review trigger orchestration, and newsletter research support. These automations replace manual steps that would otherwise consume hours of weekly execution time.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">OpenRouter API — AI Scripting Layer</p>
+            <p class="deliv-desc">Connect OpenRouter to n8n for AI-assisted content brief generation, short-form script drafting, and caption writing automation. This is the intelligence layer inside the automation system — it generates the content scaffolding that the creative tools then produce visually.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Offer Architecture Deepening</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Gift Set Collection Expansion</p>
+            <p class="deliv-desc">Build out a dedicated Gift Sets collection with multiple curated options at different price points. Fragrance is one of the highest-gifting-intent categories in eCommerce — a well-structured gift section captures purchases that a standard product page misses.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Seasonal Offer Calendar</p>
+            <p class="deliv-desc">Plan upcoming promotional moments aligned to fragrance gifting occasions — holidays, Mother's Day, Valentine's Day, home refresh season. Prebuilt offer timing removes reactive last-minute scrambling and allows content and email preparation in advance.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rhythms & KPIs -->
+    <div class="rk-grid">
+      <div class="card-white">
+        <p class="list-block-title">Operating Rhythms — Phase 2</p>
+        <ul class="check-list">
+          <li><strong>3–5 posts per day</strong> across Instagram, TikTok, and Pinterest via Metricool</li>
+          <li><strong>Weekly email performance review</strong> — open rate, click rate, revenue attributed per flow</li>
+          <li><strong>Biweekly automation check</strong> — workflows firing correctly, no failed sequences</li>
+          <li><strong>Monthly review count audit</strong> — number of new reviews, average rating, response gaps</li>
+          <li><strong>Monthly analytics review</strong> — email contribution to revenue, content-driven traffic, conversion rate trend vs Phase 1 baseline</li>
+          <li><strong>Lead magnet performance check</strong> — form conversion rate, lead quality, welcome sequence performance</li>
+        </ul>
+      </div>
+      <div class="card-white">
+        <p class="list-block-title">Success Signals — What Good Looks Like</p>
+        <ul class="check-list">
+          <li>Welcome flow open rate <strong>above 40%</strong></li>
+          <li>Cart recovery rate <strong>above 5%</strong> — at least 1 in 20 abandoned carts recovered</li>
+          <li>Email revenue contribution <strong>above 15%</strong> of total store revenue</li>
+          <li><strong>10+ verified product reviews</strong> displaying on product pages</li>
+          <li>Social content publishing <strong>consistently 3+ times per week</strong></li>
+          <li>Lead magnet converting at <strong>above 15%</strong> of form visitors</li>
+          <li>n8n automations reducing <strong>measurable manual execution time</strong> each week</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exit-box">
+      <p class="exit-title">Phase 2 Exit Criteria — what must be true before Phase 3 begins</p>
+      <div class="exit-items">
+        <span class="exit-pill">All core email flows live and performing</span>
+        <span class="exit-pill">Social content engine operational (not just started)</span>
+        <span class="exit-pill">Reviews visible on product pages</span>
+        <span class="exit-pill">Lead magnet active and capturing leads</span>
+        <span class="exit-pill">n8n automations running reliably</span>
+        <span class="exit-pill">Email contributing 15%+ of revenue</span>
+        <span class="exit-pill">Store conversion rate trending upward vs Phase 1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Phase 2 Software -->
+<section id="sw-phase2" class="section sw-section">
+  <div class="wrap">
+    <div class="sw-phase-head">
+      <span class="sw-phase-tag sw-p2-tag">Phase 2</span>
+      <h3 class="sw-head-title">Phase 2 Software Additions</h3>
+    </div>
+    <p class="sw-intro">Phase 2 activates the content engine and automation layer. Kling AI and ElevenLabs — deferred in Phase 1 — become Mandatory now that video content production is the primary deliverable. OpenRouter, n8n, and Tally are introduced to power the scripting, automation, and lead capture infrastructure. All tools already active from Phase 1 continue at their existing subscription costs.</p>
+    <div class="currency-legend"><span>Prices shown in <strong>USD</strong> and <strong>CAD</strong></span><span>Rate: 1 USD = 1.4235 CAD &nbsp;·&nbsp; Jun 24, 2026</span></div>
+
+    <!-- Mandatory -->
+    <div class="sw-tier man card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Mandatory — New Phase 2 additions, non-negotiable for the content and systems layer</span>
+        <span class="sw-tier-sub">$126 / month new</span><span class="sw-tier-sub-cad">· CA$179.36/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Kling AI</p><p class="tool-plan">Pro</p></div>
+        <p class="tool-why">NOW MANDATORY. AI video generation is the backbone of the TikTok / Reels content engine. Short-form video is non-negotiable for fragrance brands on social — and producing it manually at scale is not sustainable without AI generation.</p>
+        <p class="tool-cost">$33 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$46.98 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">ElevenLabs</p><p class="tool-plan">Creator</p></div>
+        <p class="tool-why">NOW MANDATORY. AI voiceover for social videos and ad narration. Enables a lean content production workflow without requiring live recording for every video piece. Pairs directly with Kling AI in the video production pipeline.</p>
+        <p class="tool-cost">$22 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$31.32 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">OpenRouter API</p><p class="tool-plan">Est. usage allocation</p></div>
+        <p class="tool-why">AI model routing layer for automated content script drafting, caption generation, brief writing, and research workflows. Powers the intelligence inside the n8n automation system. Without it, n8n executes steps mechanically but has no AI-generated language output.</p>
+        <p class="tool-cost">$20 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$28.47 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">n8n on Elestio</p><p class="tool-plan">Hetzner 2 vCPU / 4GB</p></div>
+        <p class="tool-why">The automation backbone that connects all tools and orchestrates repeatable workflows. First uses: content brief generation, lead delivery, review request triggers, newsletter research support. Replaces hours of manual weekly execution with automated pipelines.</p>
+        <p class="tool-cost">$22 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$31.32 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Tally</p><p class="tool-plan">Pro</p></div>
+        <p class="tool-why">The lead capture and quiz infrastructure required for the Phase 2 lead magnet deliverable. Powers the Scent Quiz or Guide intake form, feeds leads into AiTrillion and n8n workflows. The form is the front door to list growth beyond basic popups.</p>
+        <p class="tool-cost">$29 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$41.28 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <!-- Essential -->
+    <div class="sw-tier ess card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Essential — Meaningful Phase 2 improvement; adds significant production quality and operational efficiency</span>
+        <span class="sw-tier-sub">$89 / month new</span><span class="sw-tier-sub-cad">· CA$126.69/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Runway ML</p><p class="tool-plan">Standard</p></div>
+        <p class="tool-why">AI-powered video editing and production support. Improves the quality and flexibility of video outputs from Kling AI. Not the backbone of production, but a meaningful upgrade to the video workflow's polish and speed.</p>
+        <p class="tool-cost">$15 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$21.35 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Synthetic UGC</p><p class="tool-plan">Creator</p></div>
+        <p class="tool-why">Produces UGC-style video assets without relying on sourcing live creators. Particularly valuable for content variety in organic social and early ad creative testing. Removes a creative production bottleneck before a real UGC program can be built.</p>
+        <p class="tool-cost">$49 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$69.75 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Metricool</p><p class="tool-plan">Starter</p></div>
+        <p class="tool-why">Multi-platform content scheduling and analytics across Instagram, TikTok, and Pinterest. Removes the manual posting friction that breaks consistency. Consistency is what builds algorithmic momentum — Metricool is the operational layer that makes it sustainable.</p>
+        <p class="tool-cost">$25 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$35.59 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <!-- Enhancer -->
+    <div class="sw-tier enh card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Enhancer — Deferred to Phase 3 · AI personalization and advanced lead-gen assets</span>
+        <span class="sw-tier-sub">$47 / month if added early</span><span class="sw-tier-sub-cad">· CA$66.90/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Qdrant on Elestio</p><p class="tool-plan">Hetzner 2 vCPU / 4GB</p></div>
+        <p class="tool-why">Vector database for AI-powered knowledge retrieval and personalization. Most valuable when advanced personalization, smarter content segmentation, or AI memory systems are actively being built. Justified in Phase 3 when acquisition and segmentation complexity increases.</p>
+        <p class="tool-cost">$22 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$31.32 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Lovable</p><p class="tool-plan">Pro — 100 credits</p></div>
+        <p class="tool-why">AI-assisted tool for building interactive lead-generation experiences and lightweight web apps. Most justified when Phase 3 campaign-specific landing experiences or advanced personalization assets are being built. Introduce in Phase 3 rather than adding cost overhead to Phase 2.</p>
+        <p class="tool-cost">$25 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$35.59 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <div class="cost-box">
+      <p class="cost-box-title">Phase 2 Monthly Cost Summary</p>
+      <div class="cost-line"><span class="cost-lbl">Carried over from Phase 1 (Balanced)</span><div class="cost-amounts"><span class="cost-val">$146 / month</span><span class="cost-val-cad">CA$207.83</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">New Phase 2 Mandatory additions</span><div class="cost-amounts"><span class="cost-val">+ $126 / month</span><span class="cost-val-cad">+CA$179.36</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">New Phase 2 Essential additions</span><div class="cost-amounts"><span class="cost-val">+ $89 / month</span><span class="cost-val-cad">+CA$126.69</span></div></div>
+      <div class="cost-line total"><span class="cost-lbl">Cumulative Balanced Total (Phase 1 + Phase 2)</span><div class="cost-amounts"><span class="cost-val">$361 / month</span><span class="cost-val-cad">CA$513.88</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">Lean path (add Mandatory only to Phase 1 Mandatory)</span><div class="cost-amounts"><span class="cost-val">$239 / month cumulative</span><span class="cost-val-cad">CA$340.22</span></div></div>
+      <p class="cost-note">The Phase 2 Balanced total of $361/month builds a full content production engine, automation backbone, and retention system. This is the monthly investment that transforms Darity from a static storefront into an operating revenue machine.</p>
+    </div>
+
+    <div class="paths-grid">
+      <div class="path-card">
+        <p class="path-lbl">Lean Path</p>
+        <p class="path-name">Mandatory Only</p>
+        <p class="path-amount">$239 <small>/month cumulative</small></p>
+        <p class="path-amount-cad">CA$340.22 <small>/month cumulative</small></p>
+        <p class="path-desc">Adds core content engine (Kling, ElevenLabs) + automation (n8n, OpenRouter, Tally) to Phase 1 Mandatory stack.</p>
+      </div>
+      <div class="path-card rec">
+        <p class="path-lbl rec-lbl">★ Recommended</p>
+        <p class="path-name">Balanced Path</p>
+        <p class="path-amount">$361 <small>/month cumulative</small></p>
+        <p class="path-amount-cad">CA$513.88 <small>/month cumulative</small></p>
+        <p class="path-desc">Adds Runway ML, Synthetic UGC, and Metricool to the Mandatory stack. Builds a complete, sustainable content engine with scheduling and UGC-style variety.</p>
+      </div>
+      <div class="path-card">
+        <p class="path-lbl">Accelerated</p>
+        <p class="path-name">All Phase 2 Tools</p>
+        <p class="path-amount">$408 <small>/month cumulative</small></p>
+        <p class="path-amount-cad">CA$580.79 <small>/month cumulative</small></p>
+        <p class="path-desc">Adds Qdrant and Lovable early to begin building personalization infrastructure ahead of Phase 3.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     PHASE 3 — GROWTH
+════════════════════════════════════════════════ -->
+<section id="phase3" class="section-lg section-p3">
+  <div class="wrap">
+    <div class="phase-head">
+      <div class="phase-num">3</div>
+      <div>
+        <span class="phase-meta-tag">Growth Phase</span>
+        <h2 class="disp-lg phase-title">Activate the acquisition engine —<br>on a foundation built to hold it.</h2>
+        <p class="phase-summary">Phase 3 is where Darity graduates from building a brand into scaling one. With a proven store, active retention systems, and a running content engine underneath it, paid acquisition, marketplace expansion, and systematic creative testing can now be deployed against a foundation that will hold the weight. Without Phases 1 and 2 in place, Phase 3 would be premature.</p>
+      </div>
+    </div>
+
+    <div class="obj-grid">
+      <div class="obj-cell">
+        <p class="label obj-label">Phase Objective</p>
+        <p class="obj-text">Activate paid acquisition, Etsy marketplace launch, creative testing infrastructure, and advanced retention — with all the measurement, architecture, and content systems from Phases 1 and 2 already functioning underneath them.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="label obj-label">Business Problem Solved</p>
+        <p class="obj-text">A brand with no paid acquisition, no marketplace presence, and no systematic creative testing has a hard ceiling on revenue. Phase 3 removes that ceiling — intelligently, not aggressively — with a blended efficiency framework keeping it accountable.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="label obj-label">Phase 3 Outcome</p>
+        <p class="obj-text">Paid social is live with a structured testing cadence. Etsy is generating organic sales. Repeat purchase and loyalty flows are running. The business has a measurable, blended acquisition and retention engine with a clear path to Q2 expansion.</p>
+      </div>
+    </div>
+
+    <p class="label deliv-group-title" style="margin-bottom:1.5rem;">Implementation Deliverables</p>
+    <div class="deliv-grid">
+      <div>
+        <div class="deliv-group">
+          <p class="deliv-group-title">Paid Acquisition Launch</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Meta Ads Account Structure &amp; Audience Architecture</p>
+            <p class="deliv-desc">Campaign structure built for Phase 3's traffic volume: cold prospecting campaigns separated from warm retargeting campaigns. Audience architecture that distinguishes new visitors from cart abandoners, product viewers, and past purchasers. This separation prevents budget mixing and enables clean optimization decisions.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Cold Traffic Initial Creative Set</p>
+            <p class="deliv-desc">First paid ad creative batch using Phase 2 AI-produced assets: UGC-style video, lifestyle imagery, and scent storytelling formats. Multiple angles tested simultaneously against the defined Phase 3 KPI thresholds.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Retargeting Campaign Architecture</p>
+            <p class="deliv-desc">Dedicated retargeting campaigns for site visitors, add-to-cart segments, and past purchasers. The Meta Pixel installed in Phase 1 has been accumulating audience data throughout Phases 1 and 2 — this is when that data is deployed.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Paid Traffic Launch Protocol &amp; Scaling Rules</p>
+            <p class="deliv-desc">A defined set of conditions that must be met before budget is increased: minimum conversion volume, cost-per-purchase threshold, blended ROAS floor, and creative performance benchmarks. Scaling without these rules amplifies waste rather than profitable acquisition.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Creative Testing Engine</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Systematic Creative Testing Framework</p>
+            <p class="deliv-desc">A disciplined brief-to-test-to-analyze process: creative angle identified → brief written → AI-assisted production → campaign test → performance review → iteration or kill decision. This prevents creative concentration risk — the single greatest threat to paid performance beyond early-stage brands.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Creative Angle Diversification — 5+ Angles</p>
+            <p class="deliv-desc">Identify and develop at least 5 distinct creative angles for cold traffic testing: sensory/scent storytelling, gifting occasion, lifestyle aspiration, ingredient story, social proof. Angle diversification prevents the single-creative dependency that collapses paid performance when one ad fatigues.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Rolling Creative Backlog &amp; Review Cadence</p>
+            <p class="deliv-desc">Maintain a rolling backlog of 10+ creative concepts ready to enter production. Weekly creative performance review cadence: what's working, what's fatiguing, what needs to be replaced. This cadence is more important than any single ad's performance.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 3</span><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Measurement &amp; Optimization Infrastructure</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Blended Efficiency Tracking Setup</p>
+            <p class="deliv-desc">Track Marketing Efficiency Ratio (total revenue ÷ total ad spend) as the primary paid acquisition health metric — not platform-reported ROAS, which overcounts. A spread greater than 40% between platform ROAS and blended MER is a measurement integrity problem, not a performance problem.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Full-Funnel Performance Review SOP</p>
+            <p class="deliv-desc">A documented weekly and monthly review process covering paid traffic performance, email contribution, organic content reach, and combined revenue trends. Decision frameworks specifying when to scale, hold, or cut based on defined thresholds — not instinct.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 4</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="deliv-group">
+          <p class="deliv-group-title">Etsy Marketplace Expansion</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Etsy Storefront Launch</p>
+            <p class="deliv-desc">Launch Etsy storefront using Phase 1 scent-led product copy as the primary listing content base. The copy work done in Phase 1 was the prerequisite — Etsy listings written from scratch in Phase 3 alone would waste time already invested.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 2</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Etsy SEO Optimization</p>
+            <p class="deliv-desc">Keyword-optimized titles, tags, and listing descriptions tuned for Etsy's internal search algorithm. Etsy is a high-intent marketplace — buyers on Etsy are searching with purchase intent, not browsing. SEO-optimized listings capture that intent before a competitor does.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 1</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Etsy Review Generation Strategy</p>
+            <p class="deliv-desc">An early review generation plan for the new storefront. Etsy reviews are more visible than Shopify reviews in marketplace search — getting the first 5–10 reviews accelerates organic marketplace ranking significantly.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Etsy Operating Rhythm</p>
+            <p class="deliv-desc">Monthly Etsy maintenance cadence: listing review, inventory alignment, pricing check, customer message response, and review monitoring. Etsy rewards consistent engagement — absence from the platform slows algorithmic favor.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Advanced Retention &amp; Loyalty</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Repeat-Purchase Campaign Series</p>
+            <p class="deliv-desc">Dedicated email sequences designed to re-engage existing buyers based on purchase history and timing. A fragrance buyer who loved their first candle is the highest-probability buyer for a second — but only if the brand reminds them at the right moment.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Winback Flow — 60–90 Day Lapsed Buyers</p>
+            <p class="deliv-desc">An automated re-engagement sequence for customers who haven't purchased in 60–90 days. Typically uses scent storytelling + a compelling return incentive. The winback flow is low-cost to operate and creates meaningful repeat purchase revenue without acquiring a single new customer.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+          <div class="deliv-item">
+            <p class="deliv-name">Customer Segmentation — High-Value vs One-Time Buyers</p>
+            <p class="deliv-desc">Basic segmentation of the customer list into high-value buyers, one-time purchasers, and lapsed customers. Different retention strategies apply to each group. This segmentation makes every campaign more relevant and every automation more efficient.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+
+        <div class="deliv-group" style="margin-top:1.5rem;">
+          <p class="deliv-group-title">Q2+ Expansion Preparation</p>
+          <div class="deliv-item">
+            <p class="deliv-name">Q2 Strategic Review &amp; Expansion Decision</p>
+            <p class="deliv-desc">A formal quarterly review assessing whether the business metrics support expansion into Amazon, scent subscriptions, corporate gifting, or wholesale. Amazon and subscription models should only be entered once the Shopify + Etsy foundation proves it can hold the operational complexity. This review prevents premature expansion that dilutes focus before the core engine is proven.</p>
+            <div class="deliv-tags"><span class="tag tag-lay">Layer 4</span><span class="tag tag-lay">Layer 5</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rhythms & KPIs -->
+    <div class="rk-grid">
+      <div class="card-white">
+        <p class="list-block-title">Operating Rhythms — Phase 3</p>
+        <ul class="check-list">
+          <li><strong>Weekly creative review</strong> — paid ad performance vs KPI thresholds, fatiguing creative flagged, new concepts greenlit</li>
+          <li><strong>Weekly paid media check</strong> — spend efficiency, blended ROAS, audience performance by segment</li>
+          <li><strong>Biweekly email and retention review</strong> — flow performance, repeat purchase rate, winback results</li>
+          <li><strong>Monthly full-funnel analytics review</strong> — traffic → conversion → LTV → blended MER</li>
+          <li><strong>Monthly Etsy performance review</strong> — views, favorites, conversion rate, new reviews, listing improvements</li>
+          <li><strong>Quarterly strategic review</strong> — overall engine performance, Q2+ expansion decision criteria</li>
+        </ul>
+      </div>
+      <div class="card-white">
+        <p class="list-block-title">Success Signals — What Good Looks Like</p>
+        <ul class="check-list">
+          <li>Blended ROAS <strong>above 1.5x</strong> (acceptable) — <strong>above 3x</strong> is the strong target</li>
+          <li>Cold traffic conversion rate <strong>above 0.5%</strong> (acceptable) — <strong>above 2%</strong> is strong</li>
+          <li>Creative testing cadence active — <strong>3+ new concepts entering tests</strong> per cycle</li>
+          <li>Etsy storefront <strong>live with first organic sales</strong> and 5+ reviews building</li>
+          <li>Repeat purchase rate <strong>trending toward 15%+</strong></li>
+          <li>Email contributing <strong>20%+ of total revenue</strong> including retention flows</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exit-box">
+      <p class="exit-title">Phase 3 / Q2 Expansion Criteria — what must be true before Amazon, subscription, or wholesale is considered</p>
+      <div class="exit-items">
+        <span class="exit-pill">Paid acquisition achieving acceptable blended ROAS</span>
+        <span class="exit-pill">Creative testing system producing new assets consistently</span>
+        <span class="exit-pill">Etsy storefront live with growing review base</span>
+        <span class="exit-pill">Revenue baseline proven and defensible</span>
+        <span class="exit-pill">Operational capacity can absorb new channel</span>
+        <span class="exit-pill">LTV:CAC ratio above 2:1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Phase 3 Software -->
+<section id="sw-phase3" class="section sw-section">
+  <div class="wrap">
+    <div class="sw-phase-head">
+      <span class="sw-phase-tag sw-p3-tag">Phase 3</span>
+      <h3 class="sw-head-title">Phase 3 Software Additions</h3>
+    </div>
+    <p class="sw-intro">Phase 3 introduces the final two deferred tools from Phase 2 (Qdrant and Lovable), now justified by the personalization and campaign landing-page demands of paid acquisition. The Enhancer tools — Replo, Higgsfield, and Topaz — are introduced here for brands on the Accelerated path who need maximum landing-page flexibility and creative quality at paid media scale.</p>
+    <div class="currency-legend"><span>Prices shown in <strong>USD</strong> and <strong>CAD</strong></span><span>Rate: 1 USD = 1.4235 CAD &nbsp;·&nbsp; Jun 24, 2026</span></div>
+
+    <!-- Mandatory -->
+    <div class="sw-tier man card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Mandatory — Phase 2 Enhancers that become Mandatory in Phase 3</span>
+        <span class="sw-tier-sub">$47 / month new</span><span class="sw-tier-sub-cad">· CA$66.90/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Qdrant on Elestio</p><p class="tool-plan">Hetzner 2 vCPU / 4GB</p></div>
+        <p class="tool-why">NOW MANDATORY. Vector database for AI-powered knowledge retrieval and personalization workflows. In Phase 3, as customer segmentation deepens and paid acquisition requires smarter content personalization, Qdrant enables AI-assisted contextual intelligence inside the n8n automation system.</p>
+        <p class="tool-cost">$22 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$31.32 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Lovable</p><p class="tool-plan">Pro — 100 credits</p></div>
+        <p class="tool-why">NOW MANDATORY. With paid acquisition active in Phase 3, campaign-specific landing experiences and interactive lead-gen assets become justified. Lovable enables fast production of these lightweight web experiences without custom development overhead — the payoff moment for deferring it from Phase 2.</p>
+        <p class="tool-cost">$25 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$35.59 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <!-- Enhancer -->
+    <div class="sw-tier enh card-dark">
+      <div class="sw-tier-header">
+        <div class="sw-tier-dot"></div>
+        <span class="sw-tier-name">Enhancer — Speed, polish, and creative quality at paid media scale</span>
+        <span class="sw-tier-sub">$227 / month if activated</span><span class="sw-tier-sub-cad">· CA$323.13/mo</span>
+      </div>
+      <div class="tool-col-label-row"><div></div><div></div><span class="col-ccy-head">USD /mo</span><span class="col-ccy-head">CAD /mo</span></div>
+      <div class="tool-row">
+        <div><p class="tool-name">Replo</p><p class="tool-plan">Starter</p></div>
+        <p class="tool-why">Build higher-converting campaign and offer landing pages inside Shopify without custom development. Most valuable once paid acquisition is running and specific landing pages for gift sets, scent bundles, or seasonal campaigns are needed. Not required if Shopify's native page builder handles the current needs — introduce when landing page flexibility becomes a real conversion bottleneck.</p>
+        <p class="tool-cost">$119 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$169.40 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Higgsfield</p><p class="tool-plan">Pro</p></div>
+        <p class="tool-why">Advanced creative production and visual experimentation tool. Expands the range of AI-generated creative formats available for paid ad testing. Not required to get the paid acquisition engine running — adds leverage once the core creative testing cadence is already producing consistent output.</p>
+        <p class="tool-cost">$29 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$41.28 <small>/mo</small></p>
+      </div>
+      <div class="tool-row">
+        <div><p class="tool-name">Topaz Studio Pro</p><p class="tool-plan">Annual, billed monthly</p></div>
+        <p class="tool-why">High-end image and video enhancement — upscaling, sharpening, noise reduction. Most valuable when ad creative quality demands increase as paid spend scales. A finishing-quality tool that polishes existing outputs rather than creating new ones. Justifiable once ad volume is high enough that visual quality differences are measurably affecting performance.</p>
+        <p class="tool-cost">$79 <small>/mo</small></p>
+        <p class="tool-cost-cad"><span class="ccy-tag">CAD</span>CA$112.46 <small>/mo</small></p>
+      </div>
+    </div>
+
+    <div class="cost-box">
+      <p class="cost-box-title">Phase 3 Monthly Cost Summary — Cumulative</p>
+      <div class="cost-line"><span class="cost-lbl">Carried over from Phase 2 (Balanced)</span><div class="cost-amounts"><span class="cost-val">$361 / month</span><span class="cost-val-cad">CA$513.88</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">New Phase 3 Mandatory additions (Qdrant + Lovable)</span><div class="cost-amounts"><span class="cost-val">+ $47 / month</span><span class="cost-val-cad">+CA$66.90</span></div></div>
+      <div class="cost-line total"><span class="cost-lbl">Phase 3 Balanced Total (Mandatory + Essential, all phases)</span><div class="cost-amounts"><span class="cost-val">$408 / month</span><span class="cost-val-cad">CA$580.79</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">Phase 3 Accelerated (add all Enhancers)</span><div class="cost-amounts"><span class="cost-val">$635 / month</span><span class="cost-val-cad">CA$903.92</span></div></div>
+      <div class="cost-line"><span class="cost-lbl">Lean path through all phases (Mandatory only)</span><div class="cost-amounts"><span class="cost-val">$286 / month</span><span class="cost-val-cad">CA$407.12</span></div></div>
+      <p class="cost-note">The Phase 3 Balanced total of $408/month represents the complete operational software investment for a brand actively running paid acquisition, a social content engine, retention automation, and marketplace expansion. The Accelerated path ($635) adds premium landing page flexibility and advanced creative quality tools suited to brands scaling paid spend significantly.</p>
+    </div>
+
+    <div class="paths-grid">
+      <div class="path-card">
+        <p class="path-lbl">Lean Path</p>
+        <p class="path-name">All Mandatory</p>
+        <p class="path-amount">$286 <small>/month cumulative</small></p>
+        <p class="path-amount-cad">CA$407.12 <small>/month cumulative</small></p>
+        <p class="path-desc">All three phases' Mandatory tools active. Lean, focused stack that covers every critical deliverable without premium add-ons.</p>
+      </div>
+      <div class="path-card rec">
+        <p class="path-lbl rec-lbl">★ Recommended</p>
+        <p class="path-name">Balanced Path</p>
+        <p class="path-amount">$408 <small>/month cumulative</small></p>
+        <p class="path-amount-cad">CA$580.79 <small>/month cumulative</small></p>
+        <p class="path-desc">Full Mandatory + Essential stack active. Covers every core deliverable with meaningful efficiency and quality improvements. The complete operating system for Phase 3.</p>
+      </div>
+      <div class="path-card">
+        <p class="path-lbl">Accelerated</p>
+        <p class="path-name">All Tools Active</p>
+        <p class="path-amount">$635 <small>/month cumulative</small></p>
+        <p class="path-amount-cad">CA$903.92 <small>/month cumulative</small></p>
+        <p class="path-desc">Adds Replo, Higgsfield, and Topaz to the Balanced stack. For brands scaling paid spend significantly and needing maximum landing page and creative quality leverage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     TIER GUIDANCE
+════════════════════════════════════════════════ -->
+<section id="tier-guidance" class="section section-card">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How to Choose Your Tier</span>
+      <h2 class="disp-xl">Lean, balanced, or accelerated —<br>here's how to decide.</h2>
+      <p style="font-size:0.95rem; color:var(--text-2); margin-top:1rem; max-width:640px; line-height:1.75;">Not every tool needs to be active immediately, and not every phase requires the same level of investment. Use this guidance to match your current stage, budget, and ambition to the right tier path — and understand what you're trading off at each level.</p>
+    </div>
+    <div class="guidance-grid">
+      <div class="guidance-card man-card">
+        <div class="guidance-icon">◈</div>
+        <p class="guidance-title">Mandatory — Always subscribe</p>
+        <p class="guidance-body">These tools are non-negotiable for executing their respective phase properly. Removing any of them doesn't save money — it breaks the deliverable that depends on them, which typically costs more to recover than the subscription cost saved.</p>
+        <div class="guidance-when">
+          <p class="guidance-when-title">Subscribe when</p>
+          <ul class="guidance-when-list">
+            <li>The tool is listed as Mandatory in that phase</li>
+            <li>The phase you are entering begins</li>
+            <li>No viable substitute covers the same function</li>
+          </ul>
+        </div>
+      </div>
+      <div class="guidance-card ess-card">
+        <div class="ess-rec-badge">Optimal Default Path</div>
+        <div class="guidance-icon">◈</div>
+        <p class="guidance-title">Essential — The tier where the best work happens</p>
+        <p class="guidance-body">The Balanced path — Mandatory tools plus Essentials — is where maximum value is delivered. It's not a compromise between lean and accelerated. It's the path where every phase is executed to its full potential: the right tools, doing real work, producing compounding results that a Mandatory-only stack simply cannot match.</p>
+        <p class="guidance-body" style="margin-top:0.75rem;">In Phase 1, adding <strong>OpenArt</strong> expands the creative range available for brand visuals, and <strong>AiTrillion</strong> starts building the subscriber list that Phase 2's email flows depend on — every subscriber captured during Phase 1 becomes revenue recovered in Phase 2. In Phase 2, adding <strong>Runway ML</strong>, <strong>Synthetic UGC</strong>, and <strong>Metricool</strong> completes the content engine with polished video outputs, UGC-style variety, and consistent publishing across all three platforms. In Phase 3, the full Balanced stack represents the complete operating system for a brand running paid acquisition, retention automation, and marketplace expansion simultaneously — everything you need, nothing you don't.</p>
+        <ul class="ess-value-list">
+          <li>Phase 1: OpenArt expands visual creative range; AiTrillion list-building pays forward into Phase 2 email revenue</li>
+          <li>Phase 2: complete content engine — polished video (Runway ML), UGC variety (Synthetic UGC), consistent scheduling (Metricool)</li>
+          <li>Phase 3: the full operating stack for paid acquisition + retention + Etsy at $408/month cumulative</li>
+          <li>Every Essential adds a measurable capability that cannot be replicated with manual effort at scale</li>
+        </ul>
+        <div class="guidance-when" style="margin-top:1rem;">
+          <p class="guidance-when-title">The right choice when</p>
+          <ul class="guidance-when-list">
+            <li>You want the work done at its highest standard, not merely its minimum viable version</li>
+            <li>Each phase's full capability — not just its core function — matters to the outcome</li>
+            <li>Revenue from the Mandatory layer is active and the Essential additions are the next logical step</li>
+          </ul>
+        </div>
+      </div>
+      <div class="guidance-card enh-card">
+        <div class="guidance-icon">◻</div>
+        <p class="guidance-title">Enhancers — Defer until earned</p>
+        <p class="guidance-body">Enhancers are force multipliers — they increase speed, polish, leverage, and creative throughput. But they only multiply something that's already working. Adding Enhancers before the Mandatory and Essential layers are operating effectively is investing in acceleration before direction is established.</p>
+        <div class="guidance-when">
+          <p class="guidance-when-title">Add when</p>
+          <ul class="guidance-when-list">
+            <li>The Mandatory stack for that phase is fully operational</li>
+            <li>A specific capability gap the Enhancer fills has become a visible bottleneck</li>
+            <li>Paid acquisition is active and creative quality or landing page flexibility is measurably limiting performance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cost overview table -->
+    <div style="margin-top:3rem;">
+      <p class="label" style="color:var(--text-2); margin-bottom:1.5rem; display:block;">Full Cost Overview — All Phases, All Paths</p>
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="text-align:left; padding:0.75rem 1rem; font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3);">Phase</th>
+              <th style="text-align:right; padding:0.75rem 1rem; font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3);">Lean USD</th>
+              <th class="th-cad">Lean CAD</th>
+              <th style="text-align:right; padding:0.75rem 1rem; font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3);">Balanced USD</th>
+              <th class="th-cad">Balanced CAD</th>
+              <th style="text-align:right; padding:0.75rem 1rem; font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3);">Accelerated USD</th>
+              <th class="th-cad">Accelerated CAD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border-lt);">
+              <td style="padding:0.85rem 1rem; font-weight:500;">Phase 1 — Foundation</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums;">$113 /mo</td>
+              <td class="td-cad">CA$160.86</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--p1);">$146 /mo ★</td>
+              <td class="td-cad" style="font-weight:600; color:var(--p1); opacity:0.75;">CA$207.83</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; color:var(--text-2);">$201 /mo</td>
+              <td class="td-cad">CA$286.12</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-lt);">
+              <td style="padding:0.85rem 1rem; font-weight:500;">Phase 2 — Systems <span style="font-size:0.75rem; font-weight:400; color:var(--text-3);">(cumulative)</span></td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums;">$239 /mo</td>
+              <td class="td-cad">CA$340.22</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--p2);">$361 /mo ★</td>
+              <td class="td-cad" style="font-weight:600; color:var(--p2); opacity:0.75;">CA$513.88</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; color:var(--text-2);">$408 /mo</td>
+              <td class="td-cad">CA$580.79</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-lt); background:var(--bg-card);">
+              <td style="padding:0.85rem 1rem; font-weight:600;">Phase 3 — Growth <span style="font-size:0.75rem; font-weight:400; color:var(--text-3);">(cumulative)</span></td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">$286 /mo</td>
+              <td class="td-cad" style="font-weight:600;">CA$407.12</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--p3);">$408 /mo ★</td>
+              <td class="td-cad" style="font-weight:700; color:var(--p3); opacity:0.75;">CA$580.79</td>
+              <td style="padding:0.85rem 1rem; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--text-2);">$635 /mo</td>
+              <td class="td-cad" style="font-weight:600;">CA$903.92</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.75rem; color:var(--text-3); margin-top:0.75rem; line-height:1.6;">★ Recommended default path. Cumulative totals include all active tools from prior phases. All costs are monthly recurring subscriptions. Individual tool costs may change; verify at each tool's official pricing page before subscribing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FINAL SUMMARY
+════════════════════════════════════════════════ -->
+<section id="summary" class="section-lg section-dark">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow dark-eyebrow">Strategic Summary</span>
+      <h2 class="disp-xl" style="color:#F4F0E9;">Three phases. One coherent<br>architecture for growth.</h2>
+      <p class="dark-body" style="margin-top:1rem;">This roadmap is not a collection of tactics. It is a sequenced architecture — each phase creates the conditions the next phase depends on. The result is a brand that earns traffic intelligently, retains customers systematically, and scales acquisition only when the foundation is proven strong enough to support it.</p>
+    </div>
+
+    <div class="summary-pillars">
+      <div class="summary-pillar sp-p1">
+        <div class="sp-num">1</div>
+        <p class="sp-title">A store worth sending traffic to</p>
+        <p class="sp-body">Product copy that earns the purchase. Trust infrastructure that removes hesitation. Tracking that makes every decision accountable. Offer architecture that improves revenue without requiring more visitors. This is the floor everything else is built on.</p>
+      </div>
+      <div class="summary-pillar sp-p2">
+        <div class="sp-num">2</div>
+        <p class="sp-title">Systems that compound without extra effort</p>
+        <p class="sp-body">Welcome flows, cart recovery, content engines, review infrastructure, lead magnets, and automation workflows that run reliably once built. These systems improve LTV, reduce acquisition dependency, and create margin — the economic foundation that makes Phase 3 worth investing in.</p>
+      </div>
+      <div class="summary-pillar sp-p3">
+        <div class="sp-num">3</div>
+        <p class="sp-title">A scalable acquisition engine on solid ground</p>
+        <p class="sp-body">Paid social, creative testing, Etsy expansion, and blended efficiency measurement — deployed against a store that converts, a retention system that recaptures customers, and a tracking layer that tells the truth. This is how scaling becomes profitable rather than expensive.</p>
+      </div>
+    </div>
+
+    <div class="dark-divider"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;">
+      <div>
+        <span class="eyebrow dark-eyebrow" style="display:block; margin-bottom:0.75rem;">The Principle Behind the Plan</span>
+        <p style="font-size:1.05rem; color:rgba(244,240,233,.65); line-height:1.8; margin-bottom:1.25rem;">Every phase is designed around a single conviction: the infrastructure that allows a brand to scale profitably must be built before the acquisition spend that demands it. Not the other way around.</p>
+        <p style="font-size:0.9rem; color:rgba(244,240,233,.45); line-height:1.75;">The brands that scale predictably are not the ones that spend the most. They are the ones that built the clearest foundation, the strongest retention mechanics, and the most systematic creative testing process before they ever opened the paid traffic tap.</p>
+      </div>
+      <div>
+        <span class="eyebrow dark-eyebrow" style="display:block; margin-bottom:0.75rem;">Key Questions This Roadmap Answers</span>
+        <ul style="list-style:none;">
+          <li style="padding:0.6rem 0; border-bottom:1px solid rgba(244,240,233,.07); font-size:0.875rem; color:rgba(244,240,233,.55); display:flex; gap:0.6rem;"><span style="color:rgba(244,240,233,.2); flex-shrink:0;">→</span>What gets built, and in what order?</li>
+          <li style="padding:0.6rem 0; border-bottom:1px solid rgba(244,240,233,.07); font-size:0.875rem; color:rgba(244,240,233,.55); display:flex; gap:0.6rem;"><span style="color:rgba(244,240,233,.2); flex-shrink:0;">→</span>Which software is non-negotiable vs deferrable?</li>
+          <li style="padding:0.6rem 0; border-bottom:1px solid rgba(244,240,233,.07); font-size:0.875rem; color:rgba(244,240,233,.55); display:flex; gap:0.6rem;"><span style="color:rgba(244,240,233,.2); flex-shrink:0;">→</span>What does each phase cost per month?</li>
+          <li style="padding:0.6rem 0; border-bottom:1px solid rgba(244,240,233,.07); font-size:0.875rem; color:rgba(244,240,233,.55); display:flex; gap:0.6rem;"><span style="color:rgba(244,240,233,.2); flex-shrink:0;">→</span>When is the right time to start paid advertising?</li>
+          <li style="padding:0.6rem 0; border-bottom:1px solid rgba(244,240,233,.07); font-size:0.875rem; color:rgba(244,240,233,.55); display:flex; gap:0.6rem;"><span style="color:rgba(244,240,233,.2); flex-shrink:0;">→</span>When should Etsy — and eventually Amazon — come online?</li>
+          <li style="padding:0.6rem 0; font-size:0.875rem; color:rgba(244,240,233,.55); display:flex; gap:0.6rem;"><span style="color:rgba(244,240,233,.2); flex-shrink:0;">→</span>What does success look like at the end of each phase?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <p class="footer-brand">Darity Aroma Scents</p>
+    <p class="footer-note">Growth Roadmap &amp; Software Cost Architecture · Prepared for Daphine · Confidential<br>All software pricing reflects monthly recurring costs at time of document preparation. Verify current pricing at each tool's official website before subscribing. This document is a strategic planning resource, not a contractual commitment.</p>
+    <p class="footer-attr">Developed by Aldo Dawa</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  const nav     = document.getElementById('site-nav');
+  const toggle  = document.getElementById('nav-toggle');
+  const links   = document.getElementById('nav-links');
+  const hasSubs = document.querySelectorAll('.has-sub');
+
+  /* ── Scroll shadow ─────────────────────────── */
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('nav-scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  /* ── Mobile hamburger ──────────────────────── */
+  toggle.addEventListener('click', function () {
+    const isOpen = links.classList.toggle('is-open');
+    toggle.classList.toggle('is-open', isOpen);
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  /* ── Mobile submenu toggles ────────────────── */
+  hasSubs.forEach(function (item) {
+    const trigger = item.querySelector('.nav-link');
+    trigger.addEventListener('click', function (e) {
+      if (window.innerWidth <= 860) {
+        e.preventDefault();
+        // close others
+        hasSubs.forEach(function (other) {
+          if (other !== item) other.classList.remove('sub-open');
+        });
+        item.classList.toggle('sub-open');
+      }
+    });
+    // keyboard support
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+
+  /* ── Close mobile menu on anchor click ─────── */
+  document.querySelectorAll('.nav-sub a, .nav-links > li:not(.has-sub) > .nav-link').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (window.innerWidth <= 860) {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        hasSubs.forEach(function (item) { item.classList.remove('sub-open'); });
+      }
+    });
+  });
+
+  /* ── Active section highlight ──────────────── */
+  const sections  = document.querySelectorAll('section[id], header[id]');
+  const navAnchors = document.querySelectorAll('.nav-link[href^="#"], .nav-sub a[href^="#"]');
+
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        const id = '#' + entry.target.id;
+        navAnchors.forEach(function (a) {
+          a.classList.toggle('nav-active', a.getAttribute('href') === id);
+        });
+      }
+    });
+  }, { rootMargin: '-56px 0px -55% 0px', threshold: 0 });
+
+  sections.forEach(function (s) { observer.observe(s); });
+})();
+</script>
+</body>
+</html>
